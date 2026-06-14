@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityCab | Reliable Riders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --taxi-yellow: #FFCC00;
+            --dark-gray: #1A1A1A;
+            --light-bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--dark-gray);
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: var(--taxi-yellow) !important;
+            font-weight: 800;
+            font-size: 1.6rem;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--taxi-yellow) !important;
+        }
+
+        /* Carousel */
+        .carousel-item {
+            height: 75vh;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        /* Ensure the carousel item itself is full height */
+        /* .carousel-item { */
+            /* height: 75h; */
+            /* Sets the carousel to full viewport height */
+        /* } */
+
+        /* Force the image to cover the container perfectly */
+        .full-height-img {
+            height: 100vh !important;
+            width: 100% !important;
+            object-fit: cover;
+            /* This centers and crops the image to fill the area */
+            object-position: center;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+        }
+
+        .carousel-caption {
+            bottom: 20%;
+        }
+
+        .carousel-caption h2 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--taxi-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+
+        .about-section {
+            background: #fff;
+        }
+
+        .about-accent-line {
+            width: 80px;
+            height: 5px;
+            background: var(--taxi-yellow);
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        /* Fleet Cards */
+        .fleet-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .fleet-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .fleet-card img {
+            height: 220px;
+            object-fit: cover;
+        }
+
+        /* How it works Cards */
+        .horizontal-card {
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            text-align: center;
+            background: #fff;
+            height: 100%;
+        }
+
+        .horizontal-icon-wrapper {
+            width: 90px;
+            height: 90px;
+            background: var(--taxi-yellow);
+            color: var(--dark-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 25px;
+        }
+
+        /* FAQ */
+        .accordion-item {
+            border: none;
+            border-radius: 15px !important;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .accordion-button {
+            border-radius: 15px !important;
+            font-weight: 600;
+            padding: 20px;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: #fffcf0;
+            color: var(--dark-gray);
+            box-shadow: inset 5px 0 0 var(--taxi-yellow);
+        }
+
+        /* Footer Styles */
+        .footer-section {
+            background-color: var(--dark-gray);
+            color: #ccc;
+            padding: 80px 0 20px 0;
+            border-top: 5px solid var(--taxi-yellow);
+        }
+
+        .footer-brand {
+            color: var(--taxi-yellow);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h5 {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--taxi-yellow);
+        }
+
+        .footer-links {
+            line-height: 2.2;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--taxi-yellow);
+            padding-left: 5px;
+        }
+
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--taxi-yellow);
+            color: #000;
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#"><i class="fa-solid fa-taxi"></i> CityCab</a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/signup}">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/driversign}">Driver</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin-login}">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="taxiCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/image/image.jpg" alt="Taxi" class="d-block w-100 full-height-img">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h2>OneWay Trips</h2>
+                    <p>Book a premium taxi in seconds and reach your destination on time.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/image/image2.jpg" alt="Fleet" class="d-block w-100 full-height-img">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h2>Round Trips</h2>
+                    <p>Travel in comfort with our well-maintained, air-conditioned vehicles.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/image/image3.jpg" alt="Rental" class="d-block w-100 full-height-img">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h2>Car Rental</h2>
+                    <p>Take a Car To Enjoy Your Trip With Low Cost</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center text-lg-start">
+                    <span class="text-uppercase fw-bold text-muted small">About Us</span>
+                    <h2 class="display-4 fw-bold mt-2">Reliable & Safe Taxi Service</h2>
+                    <div class="about-accent-line mx-auto mx-lg-0"></div>
+                    <p class="lead mb-4">Since our founding, CityCab has been dedicated to providing the safest, most
+                        reliable, and comfortable transportation solutions in the city.</p>
+                    <p>We bridge the gap between convenience and quality. Whether you need a quick ride across town for
+                        a business meeting, a reliable airport transfer at midnight, or a premium vehicle for a special
+                        event, our fleet is available 24/7. We pride ourselves on transparent, fixed pricing with zero
+                        hidden fees, professionally trained drivers, and clean, well-maintained vehicles that meet
+                        strict safety standards. At SwiftRide, your journey is our highest priority.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="fleet-section">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5 display-5">Our Fleet</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card fleet-card"><img src="/image/11.jpg" alt="Sedan">
+                        <div class="card-body p-4 text-center">
+                            <h5>Economy Sedan</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card fleet-card"><img src="/image/22.jpg" alt="SUV">
+                        <div class="card-body p-4 text-center">
+                            <h5>Premium SUV</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card fleet-card"><img src="/image/33.jpeg" alt="Van">
+                        <div class="card-body p-4 text-center">
+                            <h5>Luxury Van</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="horizontal-cards-section" id="card">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5 display-5">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="horizontal-card">
+                        <div class="horizontal-icon-wrapper"><i class="fa-solid fa-location-dot"></i></div>
+                        <h4 class="fw-bold">1. Request a Ride</h4>
+                        <p class="text-muted">Enter your pickup location and destination. Choose the vehicle type that
+                            best suits your needs and get an instant fare estimate.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="horizontal-card">
+                        <div class="horizontal-icon-wrapper"><i class="fa-solid fa-car"></i></div>
+                        <h4 class="fw-bold">2. Driver is Dispatched</h4>
+                        <p class="text-muted">The nearest available driver accepts your request. You can track their
+                            arrival in real-time and see their vehicle details.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="horizontal-card">
+                        <div class="horizontal-icon-wrapper"><i class="fa-solid fa-face-smile"></i></div>
+                        <h4 class="fw-bold">3. Enjoy Your Journey</h4>
+                        <p class="text-muted">Sit back and relax. Our professional drivers will get you to your
+                            destination safely. Pay seamlessly via cash or card at the end.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5 display-5">Frequently Asked Questions</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="taxiFaq">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse"
+                                    data-bs-target="#c1">How do I book a ride in advance?</button></h2>
+                            <div id="c1" class="accordion-collapse collapse show">
+                                <div class="accordion-body">You can easily pre-book a ride using the booking form on our
+                                    homepage. Simply enter your pickup and drop-off locations, select your desired date
+                                    and time, and choose your vehicle type. You will receive a confirmation email once
+                                    your booking is scheduled.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed"
+                                    data-bs-toggle="collapse" data-bs-target="#c2">Are your prices fixed or
+                                    metered?</button></h2>
+                            <div id="c2" class="accordion-collapse collapse">
+                                <div class="accordion-body">We operate on a strict, transparent fixed-pricing model. The
+                                    estimated fare you see when booking is exactly what you will pay. We do not use
+                                    surge pricing during rush hour, and there are no hidden fees or extra charges for
+                                    traffic delays.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed"
+                                    data-bs-toggle="collapse" data-bs-target="#c3">Do you offer airport pickup
+                                    services?</button></h2>
+                            <div id="c3" class="accordion-collapse collapse">
+                                <div class="accordion-body">Yes, we offer 24/7 airport transfers. For airport pickups,
+                                    our drivers will track your flight status to ensure they are there right when you
+                                    land, even if your flight is delayed. We also offer optional "Meet & Greet" services
+                                    at the arrivals terminal.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed"
+                                    data-bs-toggle="collapse" data-bs-target="#c4">What payment methods do you
+                                    accept?</button></h2>
+                            <div id="c4" class="accordion-collapse collapse">
+                                <div class="accordion-body">We accept a variety of payment methods for your convenience.
+                                    You can pay securely online via credit/debit card (Visa, MasterCard, American
+                                    Express) or digital wallets like Apple Pay and Google Pay. We also accept cash
+                                    payments directly to the driver at the end of your trip.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed"
+                                    data-bs-toggle="collapse" data-bs-target="#c5">Are pets allowed in your
+                                    vehicles?</button></h2>
+                            <div id="c5" class="accordion-collapse collapse">
+                                <div class="accordion-body">Yes, we are a pet-friendly service! We kindly ask that you
+                                    inform us during the booking process if you are traveling with a pet. Small pets
+                                    should be kept in a carrier, while larger dogs should be leashed and kept on the
+                                    floorboards to ensure a safe ride for everyone.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <a href="#" class="footer-brand"><i class="fa-solid fa-taxi me-2"></i> CityCab</a>
+                    <p class="text">Providing safe, reliable, and premium taxi services 24/7. Your comfort and
+                        punctuality are our top priorities.</p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2F"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/accounts/login/?hl=en"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://x.com/"><i class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 small"></i>Home</a></li>
+                        <li><a href="#card"><i class="fa-solid fa-chevron-right me-2 small"></i>How it Works</a></li>
+                        <li><a href="#about"><i class="fa-solid fa-chevron-right me-2 small"></i>About Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h5>Our Services</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><i class="fa-solid fa-check me-2 text-warning"></i>OneWay Trip</li>
+                        <li><i class="fa-solid fa-check me-2 text-warning"></i>Round Trip</li>
+                        <li><i class="fa-solid fa-check me-2 text-warning"></i>For Rental</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-warning"></i> 123 Thiruverumbur,
+                            Trichy</li>
+                        <li class="mb-2"><i class="fa-solid fa-phone me-2 text-warning"></i> 9080084727</li>
+                        <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-warning"></i> 123@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-5 pt-4 border-top border-secondary text">
+                <p class="mb-0">&copy; 2026 CityCab. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

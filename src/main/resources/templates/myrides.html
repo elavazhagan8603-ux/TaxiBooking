@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Rides | SwiftRide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-yellow: #FFCC00;
+            --dark-gray: #1A1A1A;
+            --bg-gray: #f4f7f6;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--dark-gray);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .navbar-brand {
+            color: var(--taxi-yellow) !important;
+            font-weight: 800;
+            font-size: 1.6rem;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--taxi-yellow) !important;
+        }
+
+        /* Ride Cards Grid */
+        .ride-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        /* Phone Media Query */
+        @media (max-width: 576px) {
+            .ride-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .ride-card {
+                margin: 0 10px;
+            }
+        }
+
+        .ride-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid var(--primary-yellow);
+            transition: transform 0.3s ease;
+        }
+
+        .ride-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .badge-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: 600;
+        }
+
+        .btn-complete {
+            background-color: #28a745;
+            color: white;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            padding: 12px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .btn-complete:hover {
+            background-color: #218838;
+        }
+        .fa-taxi{
+            color: var(--primary-yellow);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container px-4">
+            <a class="navbar-brand" th:href="@{/bookinghome}"><i class="fa-solid fa-taxi"></i> CityCab</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/bookinghome}"><i class="fa-solid fa-house me-1"></i> Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="fw-bold mb-4"><i class="fa-solid fa-road text-warning me-2"></i>My Bookings & Rentals</h2>
+
+        <div th:if="${#lists.isEmpty(allMyRides)}" class="text-center py-5">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No active rides found.</h4>
+            <a th:href="@{/rental/home}" class="btn btn-warning mt-3">Book a Ride Now</a>
+        </div>
+
+        <div class="ride-grid">
+            <div th:each="ride : ${allMyRides}" class="ride-card">
+                <div class="d-flex justify-content-between mb-3">
+                    <h5 class="fw-bold m-0"
+                        th:text="${ride.class.simpleName == 'bookingmodel'} ? 'One-Way' : (${ride.class.simpleName == 'roundmodel'} ? 'Round-Trip' : 'Rental')">
+                    </h5>
+                    <span th:class="${ride.status == 'Pending'} ? 'badge badge-pending' : 'badge badge-active'"
+                        th:text="${ride.status}"></span>
+                </div>
+
+                <div class="mb-2" th:if="${ride.class.simpleName != 'rentalmodel'}">
+                    <i class="fa-solid fa-location-dot text-danger me-2"></i><strong>From:</strong> <span
+                        th:text="${ride.pickup}"></span>
+                </div>
+
+                <div class="mb-3">
+                    <i class="fa-solid fa-flag-checkered text-primary me-2"></i>
+                    <strong th:text="${ride.class.simpleName == 'rentalmodel'} ? 'Car:' : 'To:'"></strong>
+                    <span
+                        th:text="${ride.class.simpleName == 'rentalmodel'} ? ${ride.carName} : (${ride.class.simpleName == 'bookingmodel'} ? ${ride.stop} : ${ride.destination})"></span>
+                </div>
+
+                <div class="small text-muted mb-3" th:if="${ride.class.simpleName == 'rentalmodel'}">
+                    <i class="fa-solid fa-calendar-days me-2"></i>Duration: <span th:text="${ride.days}"></span> days
+                </div>
+
+                <div th:if="${ride.status != 'Pending'}">
+                    <form th:if="${ride.class.simpleName == 'bookingmodel'}"
+                        th:action="@{/user/complete/One-Way/{id}(id=${ride.id})}" method="post">
+                        <button class="btn btn-complete"><i class="fa-solid fa-check me-2"></i>Complete Trip</button>
+                    </form>
+                    <form th:if="${ride.class.simpleName == 'roundmodel'}"
+                        th:action="@{/user/complete/Round-Trip/{id}(id=${ride.id})}" method="post">
+                        <button class="btn btn-complete"><i class="fa-solid fa-check me-2"></i>Complete Trip</button>
+                    </form>
+                    <form th:if="${ride.class.simpleName == 'rentalmodel'}"
+                        th:action="@{/user/complete/Rental/{id}(id=${ride.id})}" method="post">
+                        <button class="btn btn-complete"><i class="fa-solid fa-check me-2"></i>End Rental</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

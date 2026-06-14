@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftRide | Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --dark-gray: #2d3436;
+            --taxi-yellow: #FFCC00;
+            --sidebar-bg: #1e1e2d;
+        }
+
+        body {
+            background-color: #f5f6fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 260px;
+            position: fixed;
+            background: var(--sidebar-bg);
+            color: #a2a3b7;
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-box {
+            padding: 20px;
+            text-align: center;
+            color: var(--taxi-yellow);
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            color: #a2a3b7;
+            padding: 15px 25px;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #2b2b40;
+            color: #fff;
+            border-left: 4px solid var(--taxi-yellow);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+        }
+
+        .stat-card {
+            border-radius: 15px;
+            border: none;
+            padding: 25px;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-box {
+            font-size: 2rem;
+            color: var(--taxi-yellow);
+        }
+
+        /* Fleet Table Styles */
+        .fleet-card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="brand-box">
+            <h4><i class="fa-solid fa-taxi"></i> CityCab | Reliable Riders</h4>
+            <small class="text-uppercase">Administrator</small>
+        </div>
+        <a class="nav-link active" th:href="@{/admin}"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a>
+        <a class="nav-link" th:href="@{/admin/driver-approvals}"><i class="fa-solid fa-user-check me-2"></i> Driver
+            Approvals</a>
+        <a class="nav-link" th:href="@{/admin/rental-approvals}"><i class="fa-solid fa-car-side me-2"></i> Rental
+            Requests</a>
+        <a class="nav-link" th:href="@{/admin/add-rental}"><i class="fa-solid fa-plus-circle me-2"></i> Add Rental
+            Car</a>
+
+        <div class="mt-5 px-4">
+            <a class="btn btn-outline-danger w-100" th:href="@{/admin-logout}"><i
+                    class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h2 class="mb-4 fw-bold">Dashboard Overview</h2>
+
+        <h4 class="fw-bold mb-3">Manage Rental Fleet</h4>
+        <div class="card fleet-card p-4">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Car Name</th>
+                        <th>Type</th>
+                        <th>Price/Day</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="car : ${allCars}">
+                        <td th:text="${car.carName}">Toyota Innova</td>
+                        <td th:text="${car.carType}">SUV</td>
+                        <td th:text="'₹' + ${car.pricePerDay}">₹1500</td>
+                        <td>
+                            <span th:class="${car.status == 'Available'} ? 'badge bg-success' : 'badge bg-secondary'"
+                                th:text="${car.status}">Available</span>
+                        </td>
+                        <td>
+                            <form th:if="${car.status == 'Available'}"
+                                th:action="@{/rental/admin/delete/{id}(id=${car.id})}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Permanently remove this car from inventory?')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                            <span th:if="${car.status != 'Available'}" class="text-muted small">
+                                <i class="fa-solid fa-lock"></i> In use
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

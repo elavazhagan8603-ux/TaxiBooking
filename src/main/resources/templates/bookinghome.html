@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftRide | Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --taxi-yellow: #FFCC00;
+            --dark-gray: #1A1A1A;
+            --light-bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f4f7f6 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--dark-gray);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: var(--taxi-yellow) !important;
+            font-weight: 800;
+            font-size: 1.6rem;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--taxi-yellow) !important;
+        }
+
+        .status-banner {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 8px solid var(--taxi-yellow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .cards-section {
+            padding: 60px 0;
+        }
+
+        /* Unified Card Styling */
+        .booking-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            /* Required for button alignment */
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .booking-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            background: #fff9e6;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            color: var(--taxi-yellow);
+        }
+
+        /* Forces button to the bottom of the card */
+        .btn-wrapper {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        .btn-book {
+            background-color: var(--dark-gray);
+            color: var(--taxi-yellow);
+            font-weight: 800;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .btn-book:hover {
+            background-color: var(--taxi-yellow);
+            color: var(--dark-gray);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container px-4">
+            <a class="navbar-brand" th:href="@{/bookinghome}"><i class="fa-solid fa-taxi"></i> CityCab</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/first}"><i class="fa-solid fa-house me-1"></i>Home</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="status-banner d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="fw-bold"><i class="fa-solid fa-clock text-warning me-2"></i> Your Recent Booking</h5>
+                <p class="text-muted mb-0">Monitor your trip progress or driver status.</p>
+            </div>
+            <a th:href="@{/my-rides}" class="btn btn-outline-dark fw-bold">View Status</a>
+        </div>
+    </div>
+
+    <section class="cards-section container">
+        <h2 class="text-center fw-bold mb-5" style="font-size: 2.5rem; letter-spacing: -1px;">Choose Your Ride Mode</h2>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="booking-card">
+                    <div class="card-icon"><i class="fa-solid fa-car"></i></div>
+                    <h4 class="fw-bold">One-Way Trip</h4>
+                    <p class="text-muted mb-4">Fast, affordable, and direct travel to your destination.</p>
+                    <div class="btn-wrapper"><a th:href="@{/onewaybook}" class="btn-book">Book One-Way</a></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="booking-card">
+                    <div class="card-icon"><i class="fa-solid fa-car-side"></i></div>
+                    <h4 class="fw-bold">Round Trip</h4>
+                    <p class="text-muted mb-4">Perfect for planned visits with return flexibility.</p>
+                    <div class="btn-wrapper"><a th:href="@{/roundtrip}" class="btn-book">Book Round-Trip</a></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="booking-card">
+                    <div class="card-icon"><i class="fa-solid fa-key"></i></div>
+                    <h4 class="fw-bold">Car Rental</h4>
+                    <p class="text-muted mb-4">Drive yourself with our premium rental fleet.</p>
+                    <div class="btn-wrapper"><a th:href="@{/rental/home}" class="btn-book">Rent a Car</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center p-4 bg-dark text-light mt-auto">
+        <p class="mb-0">&copy; 2026 City Cab Taxi Services. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

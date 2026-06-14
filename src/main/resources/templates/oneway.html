@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book One-Way Ride | CityCab</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --taxi-yellow: #FFCC00;
+            --dark-gray: #1A1A1A;
+            --light-bg: #f4f7f6;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--light-bg); }
+
+        /* Navbar Styling */
+        .navbar { background-color: var(--dark-gray); padding: 1rem 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .navbar-brand { color: var(--taxi-yellow) !important; font-weight: 800; font-size: 1.6rem; }
+        .nav-link { color: #ffffff !important; font-weight: 500; }
+        .nav-link:hover { color: var(--taxi-yellow) !important; }
+
+        /* Booking Card */
+        .booking-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            padding: 45px;
+            max-width: 650px;
+            margin: 40px auto;
+            border-top: 8px solid var(--taxi-yellow);
+        }
+
+        .form-label { font-weight: 600; color: #444; }
+        .input-group-text { background-color: #f8f9fa; border-right: none; color: #6c757d; border-radius: 10px 0 0 10px; }
+        .form-control, .form-select { border-radius: 0 10px 10px 0; padding: 12px 15px; border: 1px solid #e1e5eb; }
+        
+        .btn-taxi {
+            background-color: var(--taxi-yellow);
+            color: var(--dark-gray);
+            font-weight: 800;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-taxi:hover { background-color: #e6b800; transform: translateY(-2px); }
+
+        .table-container { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); }
+        .table thead { background-color: var(--dark-gray); color: var(--taxi-yellow); }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container px-4">
+            <a class="navbar-brand" th:href="@{/bookinghome}"><i class="fa-solid fa-taxi"></i> CityCab</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/bookinghome}"><i class="fa-solid fa-house me-1"></i> Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="booking-card">
+                <h3 class="text-center fw-bold mb-4"><i class="fa-solid fa-location-arrow text-warning me-2"></i> Book a One-Way Ride</h3>
+
+                <form th:action="@{/onewaybook}" th:object="${bookingmodel}" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-user me-2"></i>Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" th:field="*{name}" class="form-control"  required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-phone me-2"></i>Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                <input type="tel" th:field="*{phone}" class="form-control" pattern="[0-9]{10}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-location-dot me-2"></i>Pickup Location</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                <select th:field="*{pickup}" class="form-select" required>
+                                    <option value="" disabled selected>Select Pickup</option>
+                                    <option value="Trichy">Trichy</option>
+                                    <option value="Madurai">Madurai</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="Chennai">Salem</option>
+                                    <option value="Chennai">Theni</option>
+                                    <option value="Chennai">Karur</option>
+                                    <option value="Chennai">Cuddalore</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-map-marker-alt me-2"></i>Drop-off Location</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-map-marker-alt"></i></span>
+                                <select th:field="*{stop}" class="form-select" required>
+                                    <option value="" disabled selected>Select Drop-off</option>
+                                    <option value="Trichy">Trichy</option>
+                                    <option value="Madurai">Madurai</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="Chennai">Salem</option>
+                                    <option value="Chennai">Theni</option>
+                                    <option value="Chennai">Karur</option>
+                                    <option value="Chennai">Cuddalore</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-calendar-days me-2"></i>Pickup Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                                <input type="date" th:field="*{date}" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold"><i class="fa-solid fa-clock me-2"></i>Pickup Time</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-clock"></i></span>
+                                <input type="time" th:field="*{time}" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-taxi mt-3"><i class="fa-solid fa-check-circle me-2"></i>Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mb-5">
+        <h4 class="text-center fw-bold mb-4"><i class="fa-solid fa-tag text-warning me-2"></i> Routes & Prices</h4>
+        <div class="table-container shadow-sm">
+            <table class="table table-hover align-middle text-center mb-0">
+                <thead>
+                    <tr>
+                        <th>Pickup</th>
+                        <th>Destination</th>
+                        <th>Standard</th>
+                        <th>Premium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trichy</td>
+                        <td>Madurai</td>
+                        <td>₹ 2650</td>
+                        <td>₹ 3950</td>
+                    </tr>
+                    <tr>
+                        <td>Trichy</td>
+                        <td>Chennai</td>
+                        <td>₹ 3800</td>
+                        <td>₹ 5200</td>
+                    </tr>
+                     <tr>
+                        <td>Trichy</td>
+                        <td>Theni</td>
+                        <td>₹ 2800</td>
+                        <td>₹ 4200</td>
+                    </tr>
+                     <tr>
+                        <td>Salem</td>
+                        <td>Chennai</td>
+                        <td>₹ 3100</td>
+                        <td>₹ 5700</td>
+                    </tr>
+                     <tr>
+                        <td>Karur</td>
+                        <td>Chennai</td>
+                        <td>₹ 3600</td>
+                        <td>₹ 5700</td>
+                    </tr>
+                     <tr>
+                        <td>Trichy</td>
+                        <td>Salem</td>
+                        <td>₹ 3800</td>
+                        <td>₹ 5200</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <footer class="text-center p-4 bg-dark text-light mt-auto">
+        <p class="mb-0">&copy; 2026 City Cab Taxi Services. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
